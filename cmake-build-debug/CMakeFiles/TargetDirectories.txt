@@ -1,0 +1,3 @@
+C:/Users/John Samy/mini_photoshop/mini_photoshop/cmake-build-debug/CMakeFiles/mini_photoshop.dir
+C:/Users/John Samy/mini_photoshop/mini_photoshop/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/John Samy/mini_photoshop/mini_photoshop/cmake-build-debug/CMakeFiles/rebuild_cache.dir
