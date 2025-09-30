@@ -1,5 +1,6 @@
 #include<iostream>
 #include<cmath>
+#include <vector>
 #include "Image_Class.h"
 using namespace std;
 string jpg=".jpg";
@@ -47,6 +48,19 @@ Image black_white(Image image) {
   return image;
 }
 
+// 3- Invert Filter
+void invert(Image& img ) {
+
+    for (int y = 0; y < img.height; y++) {
+        for (int x = 0; x < img.width; x++) {
+            for (int c = 0; c < 3; c++) {
+                unsigned char val = img.getPixel(x, y, c);
+                img.setPixel(x, y, c, 255 - val);
+            }
+        }
+    }
+}
+
 //  5-  horizontal & Vertical
 Image horizontal_Vertical(Image image){
   Image image2(image.width,image.height);
@@ -69,6 +83,49 @@ Image horizontal_Vertical(Image image){
   return image;
 }
 
+// 6- Rotate Filter
+void Rotate(Image& img){
+    int angle;
+    cout << "Enter rotation angle (90 / 180 / 270): ";
+    cin >> angle;
+    int newWidth = (angle == 180) ? img.width : img.height;
+    int newHeight = (angle == 180) ? img.height : img.width;
+
+
+     unsigned char* rotatedData = new unsigned char[newWidth * newHeight * img.channels];
+
+
+
+    for (int y = 0; y < img.height; y++) {
+        for (int x = 0; x < img.width; x++) {
+            for (int c = 0; c < img.channels; c++) {
+                unsigned char value = img.getPixel(x, y, c);
+
+                int newX, newY;
+                if (angle == 270) {
+                    newX = y;
+                    newY = img.width - 1 - x;
+                } else if (angle == 180) {
+                    newX = img.width - 1 - x;
+                    newY = img.height - 1 - y;
+                } else if (angle == 90) {
+                    newX = img.height - 1 - y;
+                    newY = x;
+                } else {
+                    cout << "Unsupported angle!\n";
+                    exit(0);
+                }
+
+                rotatedData[(newY * newWidth + newX) * img.channels + c] = value;
+            }
+        }
+    }
+ stbi_image_free(img.imageData);
+
+    img.imageData = rotatedData;
+    img.width = newWidth;
+    img.height = newHeight;
+}
 
 // 8- crop
 Image crop(Image image) {
@@ -88,6 +145,68 @@ Image crop(Image image) {
   cout<<"Done  ;)\n";
   return image;
 }
+
+
+
+// 9- Frame filter
+Image frame(Image& img){
+      int thickness;
+      int choice;
+    cout << "Enter frame thickness: ";
+    cin >> thickness;
+
+    cout << "Choose frame type (0 = Simple, 1 = Decorated): ";
+    cin >> choice;
+
+    int newW = img.width + 2 * thickness;
+    int newH = img.height + 2 * thickness;
+
+    Image framed(newW, newH);
+
+
+    for (int y = 0; y < newH; y++) {
+        for (int x = 0; x < newW; x++) {
+            for (int c = 0; c < img.channels; c++) {
+                unsigned char val;
+
+
+                if (x >= thickness && x < thickness + img.width &&
+                    y >= thickness && y < thickness + img.height) {
+
+                    val = img.getPixel(x - thickness, y - thickness, c);
+                }
+
+                else {
+                    if (choice == 0) {
+
+                        val = 255;
+                    } else {
+
+                        if (((x / 10) + (y / 10)) % 2 == 0) {
+                            val = (c == 0 ? 255 : 0);
+                        } else {
+                            val = 0;
+                        }
+                    }
+                }
+
+                 framed.setPixel(x, y, c, val);
+            }
+        }
+    }
+    return framed;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 // 11 - resize
 Image resize(Image image) {
@@ -110,6 +229,46 @@ Image resize(Image image) {
   cout<<"Done  ;)\n";
   return image;
 }
+
+
+// 12- Blur Filter
+void blur(Image& img){
+
+
+ for (int y = 5; y < img.height -5 ; y++) {
+        for (int x = 5; x < img.width-5 ; x++) {
+            for (int c = 0; c < img.channels; c++) {
+                int sum = 0;
+
+
+                for (int dy = -5; dy <= 5; dy++) {
+                    for (int dx = -5; dx <= 5; dx++) {
+                        sum += img.getPixel(x + dx, y + dy, c);
+                    }
+                }
+
+                img.setPixel(x, y, c, sum / 121);
+
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // TV filter 13
 Image TV_filter(Image image) {
   for (int i=0;i<image.width;i++) {
@@ -135,13 +294,19 @@ Image purple(Image image) {;
   return image;
 }
 
+
+
+
+
+
 int main(){
   //while (true){
-    string photo;
+    string photo,filename;
     cout<<"Please enter The Image Name->  ";
     cin>>photo;
     cout<<photo<<'\n';
     Image image(photo);
+    Image framed;
     if( image.loadNewImage(photo)) cout<<"Image Loaded Successfully!"<<endl;
     else {cout<<"Image Not Loaded!\n";
     //  break;
@@ -161,9 +326,16 @@ int main(){
 
     case 3:
       cout<<"You picked option 3 \n";
+
+         invert(image);
+          cout << "Pls enter image name to store new image\n";
+          cout << "and specify extension .jpg, .bmp, .png, .tga: ";
+          cin >> filename;
+       image.saveImage(filename);
+       system(filename.c_str());
       break;
 
-    case 4:
+     case 4:
       cout<<"You picked option 4 \n";
       break;
 
@@ -175,6 +347,13 @@ int main(){
 
     case 6:
       cout<<"You picked option 6 \n";
+        Rotate(image);
+        cout << "Pls enter image name to store new image\n";
+        cout << "and specify extension .jpg, .bmp, .png, .tga: ";
+
+        cin >> filename;
+       image.saveImage(filename);
+       system(filename.c_str());
       break;
 
     case 7:
@@ -189,6 +368,15 @@ int main(){
 
     case 9:
       cout<<"You picked option 9 \n";
+       framed= frame(image);
+
+       cout << "Pls enter image name to store new image\n";
+       cout << "and specify extension .jpg, .bmp, .png, .tga: ";
+
+      cin >> filename;
+
+      framed.saveImage(filename);
+      system(filename.c_str());
       break;
 
     case 10:
@@ -202,6 +390,15 @@ int main(){
 
     case 12:
       cout<<"You picked option 12\n";
+       blur(image);
+
+
+       cout << "Pls enter image name to store new image\n";
+       cout << "and specify extension .jpg, .bmp, .png, .tga: ";
+        cin >> filename;
+
+      image.saveImage(filename);
+      system(filename.c_str());
       break;
 
     case 13:
