@@ -1,4 +1,9 @@
 // mini_photoshop project a1 for cs
+// name :John Samy Gadelkareem   Id:20240148 Filters : 2,5,8,11 + bonus tv and purple
+// name :Ahmed Khattab           Id:20230030 Filters : 1,4,7,10
+// name : Hassan Mohammed        Id:20240164 Filters : 3,6,9,12
+
+//filters 7,10 and the bonus purple arn't ready yet
 
 #include<iostream>
 #include<cmath>
