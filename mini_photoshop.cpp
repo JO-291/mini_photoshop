@@ -110,14 +110,13 @@ Image resize(Image image) {
   cout<<"Done  ;)\n";
   return image;
 }
+
 // TV filter 13
 Image TV_filter(Image image) {
   for (int i=0;i<image.width;i++) {
     for (int j=0;j<image.height;j++) {
       if (j%4==0) {
-        for (int k=0;k<3;k++) {
-          image(i,j,k)=0;
-        }
+        for (int k=0;k<3;k++) image(i,j,k)=0;
       }
     }
   }
@@ -127,9 +126,7 @@ Image TV_filter(Image image) {
 Image purple(Image image) {;
   for (int i=0;i<image.width;i++) {
     for (int j=0;j<image.height;j++) {
-      for (int k=0;k<3;k++) {
-        image(i,j,k) += (k==0||k==1)?50:0;
-      }
+      for (int k=0;k<3;k++) image(i,j,k) += (k==0||k==1)?50:0;
     }
   }
   return image;
@@ -142,10 +139,8 @@ int main(){
     cin>>photo;
     cout<<photo<<'\n';
     Image image(photo);
-    if( image.loadNewImage(photo)) cout<<"Image Loaded Successfully!"<<endl;
-    else {cout<<"Image Not Loaded!\n";
-    //  break;
-    }
+    if(image.loadNewImage(photo)) cout<<"Image Loaded Successfully!\n";
+    else cout<<"Image Not Loaded!\n";
     printmssg();
     int filter;cin>>filter;cout<<'\n';
   switch (filter) {
