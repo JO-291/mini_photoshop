@@ -1,9 +1,9 @@
 // mini_photoshop project a1 for cs
-// name :John Samy Gadelkareem   Id:20240148 Filters : 2,5,8,11 + bonus tv and purple
+// name :John Samy Gadelkareem   Id:20240148 Filters : 2,5,8,11 + bonus tv + purple
 // name :Ahmed Khattab           Id:20230030 Filters : 1,4,7,10
 // name : Hassan Mohammed        Id:20240164 Filters : 3,6,9,12
-
-//filters 7,10 and the bonus purple arn't ready yet
+// Sections hasn't been chosen yet
+//the bonus purple arn't ready yet
 
 #include<iostream>
 #include<cmath>
@@ -14,7 +14,7 @@ using namespace std;
 
 void save_image(Image image,string photo){
     string filename;
-    cout<<"create a new photo()y or save(s)??\n(y/s) choose:\n";
+    cout<<"To Save As(y) or Save(s)??\n(y/s) choose:\n";
     char h;cin>>h;h = tolower(h);
     while (h != 'y' && h != 's') {
         cout << "Invalid input! Try again (y/s): ";
@@ -38,32 +38,30 @@ void printmssg() {
     cout<<"->  4 - Merge Images\n";
     cout<<"->  5 - Flip Image\n";
     cout<<"->  6 - Rotate Image\n";
-    //cout<<"->  7 - Darken and Lighten Image\n";
+    cout<<"->  7 - Darken and Lighten Image\n";
     cout<<"->  8 - Crop Images\n";
     cout<<"->  9 - Adding a Frame to the Picture\n";
-    //cout<<"->  10- Detect Image Edges\n";
+    cout<<"->  10- Detect Image Edges\n";
     cout<<"->  11- Resizing Images\n";
     cout<<"->  12- Blur Images\n";
     cout<<"->  13- TV filter\n->";
-    //cout<<"->  14- Purple filter\n";;
-
+    cout<<"->  14- Purple filter\n";
 }
 //1-Grayscle
-Image grayscale(Image image){
+Image grayscale(Image& image){
     for(int i = 0;i<image.width;i++){
         for(int j = 0;j<image.height;j++){
             unsigned int avg = 0;
             for(int k=0; k<3; k++) avg += image(i,j,k);
             avg = avg/3;
             for(int k = 0; k<3; k++) image(i,j,k)=avg;
-
         }
     }
     return image;
     }
 
 // 2- Black and white
-Image black_white(Image image) {
+Image black_white(Image& image) {
     for (int i=0;i<image.width;i++) {
         for (int j=0;j<image.height;j++) {
             unsigned int avg=0;
@@ -94,7 +92,7 @@ Image invert(Image& img ) {
     return img;
 }
 //  4-  merge
-Image merge(Image image1,Image image2){
+Image merge(Image& image1,Image& image2){
     Image newimage1;
     Image newimage2;
     if(image1.width!=image2.width||image1.height!=image2.height) {
@@ -161,7 +159,8 @@ Image merge(Image image1,Image image2){
             image2 = newimage2;
         }
     }
-    Image merged(image1.width,image1.height);
+
+Image merged(image1.width,image1.height);
     for (int i = 0; i < image1.width; ++i) {
         for (int j = 0; j < image1.height; ++j) {
             for (int k = 0; k < 3; ++k) merged(i,j,k) = (image1(i,j,k)+image2(i,j,k))/2;
@@ -172,7 +171,7 @@ Image merge(Image image1,Image image2){
 
 
 //  5-  horizontal & Vertical
-Image horizontal_Vertical(Image image){
+Image horizontal_Vertical(Image& image){
     Image image2(image.width,image.height);
     cout<<"Enter h for horizontal Flip or v for vertical Flip:\n";
     char h;cin>>h;
@@ -234,8 +233,47 @@ void Rotate(Image& img){
     img.height = newHeight;
 }
 
+//7- Darken and lighten
+Image Darkenandlighten(Image& image){
+    cout<<"what do you want to do:"<<endl;
+    cout<<"enter 1 to darken"<<endl;
+    cout<<"enter 2 to lighten"<<endl;
+    int x;
+    cin>>x;
+    while (x != 1 && x != 2) {
+        cout << "Invalid input! Try again (1/2): ";
+        cin >> x;
+    }
+    if(x == 1){
+        for(int i = 0;i<image.width;++i){
+            for(int j = 0;j<image.height;++j){
+                for(int k = 0;k<3;++k){
+                    float pix = static_cast<float>(image(i, j, k));
+                    pix *= 0.5f;
+                    pix = max(0.0f, pix);
+                    image(i, j, k) = static_cast<unsigned char>(pix);
+                }
+            }
+        }
+    }
+    else if(x == 2){
+        for(int i = 0;i<image.width;++i){
+            for(int j = 0;j<image.height;++j){
+                for(int k = 0;k<3;++k){
+                    float pix = static_cast<float>(image(i, j, k));
+                    pix *= 1.5f;
+                    pix = min(255.0f, pix);
+                    image(i, j, k) = static_cast<unsigned char>(pix);
+                }
+            }
+        }
+    }
+    return image;
+}
+
+
 // 8- crop
-Image crop(Image image) {
+Image crop(Image& image) {
     cout<<"Enter cropped Image Dimensions:\n";
     int row,col;
     cin>>row>>col;
@@ -251,7 +289,6 @@ Image crop(Image image) {
     cout<<"Done  ;)\n";
     return image2;
 }
-
 
 
 // 9- Frame filter
@@ -283,10 +320,8 @@ Image frame(Image& img){
                     else {
                         if (((x / 10) + (y / 10)) % 2 == 0) val = (c == 0 ? 255 : 0);
                         else val = 0;
-
                     }
                 }
-
                 framed.setPixel(x, y, c, val);
             }
         }
@@ -295,18 +330,32 @@ Image frame(Image& img){
 }
 
 
+//10 - detect edge
+Image edgeDetection(Image& image){
+    image = grayscale(image);
+    int diffright,diffdown;
+    for (int i = 0; i < image.width-1; ++i) {
+        for (int j = 0; j < image.height - 1; ++j) {
+            diffright = abs(image(i, j, 0) - image(i + 1, j, 0));
+            diffdown = abs(image(i, j, 0) - image(i, j + 1, 0));
 
+            for (int k = 0; k < 3; ++k) {
 
-
-
-
-
-
-
+                if (diffright > 30 || diffdown > 30) {
+                    image(i, j, k) = 0;
+                }
+                else{
+                    image(i,j,k) = 255;
+                }
+            }
+        }
+    }
+    return image;
+}
 
 
 // 11 - resize
-Image resize(Image image) {
+Image resize(Image& image) {
     cout<<"enter Row*column spaced :\n";
     int row,col;
     cin>>row>>col;
@@ -344,43 +393,28 @@ Image blur(Image& img){
     return img;
 }
 
-
-
-
-
-
-
-
-
-
 // TV filter 13
-Image TV_filter(Image image) {
+Image TV_filter(Image& image) {
     for (int i=0;i<image.width;i++) {
         for (int j=0;j<image.height;j++) {
             if (j%4==0) {
                 for (int k=0;k<3;k++) image(i,j,k)=0;
-
             }
         }
     }
     return image;
 }
 
-Image purple(Image image) {;
+Image purple(Image& image) {;
     for (int i=0;i<image.width;i++) {
         for (int j=0;j<image.height;j++) {
             for (int k=0;k<3;k++) {
                 if (k==0||k==2)image(i,j,k) = 2.4f*(int)image(i,j,k) ;
-                if ((int)image(i,j,k)>255)image(i,j,k)=255;
             }
         }
     }
     return image;
 }
-
-
-
-
 
 
 int main(){
@@ -472,19 +506,23 @@ int main(){
             cout<<"You picked option 6 \n";
             Rotate(image);
             history.push(image);
-        filenames.push(photo);
+            filenames.push(photo);
             save_image(image,photo);
             break;
 
         case 7:
-            cout<<"Not working yet \n";
+            cout<<"You picked option 7 \n";
+            image = Darkenandlighten(image);
+            history.push(image);
+            filenames.push(photo);
+            save_image(image,photo);
             break;
 
         case 8:
             cout<<"You picked option 8 \n";
             image=crop(image);
             history.push(image);
-        filenames.push(photo);
+            filenames.push(photo);
             save_image(image,photo);
             break;
 
@@ -492,19 +530,23 @@ int main(){
             cout<<"You picked option 9 \n";
             framed= frame(image);
             history.push(framed);
-        filenames.push(photo);
+            filenames.push(photo);
             save_image(framed,photo);
             break;
 
         case 10:
-            cout<<"Not working yet \n";
+            cout<<"You picked option 10 \n";
+            image=edgeDetection(image);
+            history.push(image);
+            filenames.push(photo);
+            save_image(image,photo);
             break;
 
         case 11:
             cout<<"You picked option 11\n";
             image=resize(image);
             history.push(image);
-        filenames.push(photo);
+            filenames.push(photo);
             save_image(image,photo);
             break;
 
@@ -512,7 +554,7 @@ int main(){
             cout<<"You picked option 12\n";
             image=blur(image);
             history.push(image);
-        filenames.push(photo);
+            filenames.push(photo);
             save_image(image,photo);
             break;
 
@@ -525,12 +567,11 @@ int main(){
             break;
 
         case 14:
-            cout<<"Not working yet \n";
-            // cout<<"You picked option 14\n";
-            // image=purple(image);
-            // history.push(image);
-            // image.saveImage(photo);
-            //filenames.push(photo);
+             cout<<"You picked option 14\n";
+             image=purple(image);
+             history.push(image);
+             image.saveImage(photo);
+            filenames.push(photo);
              break;
         case 20: {
             string newfile;
