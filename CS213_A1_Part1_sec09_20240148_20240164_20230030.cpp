@@ -3,8 +3,8 @@
 // name :Ahmed Khattab          didn't register Id:20230030 Filters : 1,4,7,10
 // name : Hassan Mohammed       s:s9            Id:20240164 Filters : 3,6,9,12
 // github repo: https://github.com/JO-291/mini_photoshop
-// drive :     https://drive.google.com/drive/folders/1MF-7ubACQxSf8J2ZoOHFS-64Bhg3LIil?usp=sharing
-
+// vid :     https://drive.google.com/drive/folders/1MF-7ubACQxSf8J2ZoOHFS-64Bhg3LIil?usp=sharing
+// doc :
 #include<iostream>
 #include<cmath>
 #include <vector>
