@@ -1,9 +1,7 @@
 // mini_photoshop project a1 for cs
-// name :John Samy Gadelkareem   Id:20240148 Filters : 2,5,8,11 + bonus tv + purple
-// name :Ahmed Khattab           Id:20230030 Filters : 1,4,7,10
-// name : Hassan Mohammed        Id:20240164 Filters : 3,6,9,12
-// Sections hasn't been chosen yet
-//the bonus purple arn't ready yet
+// name :John Samy Gadelkareem  s:s23           Id:20240148 Filters : 2,5,8,11 + bonus tv & purple
+// name :Ahmed Khattab          didn't register Id:20230030 Filters : 1,4,7,10
+// name : Hassan Mohammed       s:s9            Id:20240164 Filters : 3,6,9,12
 
 #include<iostream>
 #include<cmath>
@@ -44,8 +42,8 @@ void printmssg() {
     cout<<"->  10- Detect Image Edges\n";
     cout<<"->  11- Resizing Images\n";
     cout<<"->  12- Blur Images\n";
-    cout<<"->  13- TV filter\n->";
-    cout<<"->  14- Purple filter\n";
+    cout<<"->  13- TV filter\n";
+    cout<<"->  14- Purple filter\n->";
 }
 //1-Grayscle
 Image grayscale(Image& image){
@@ -101,6 +99,10 @@ Image merge(Image& image1,Image& image2){
         cout << "2-merge the common area of smaller height and width" << endl;
         int a, x, y;
         cin >> a;
+        while (a != 1 && a != 2) {
+            cout << "Invalid input! Try again (1/2): ";
+            cin >> x;
+        }
         if (a == 1) {
             if (image1.width > image2.width) {
                 x = image1.width;
@@ -197,6 +199,10 @@ void Rotate(Image& img){
     int angle;
     cout << "Enter rotation angle (90 / 180 / 270): ";
     cin >> angle;
+    while (angle != 90 && angle != 180 && angle != 270) {
+        cout << "Invalid input! Try again (90 / 180 / 270): ";
+        cin >> angle;
+    }
     int newWidth = (angle == 180) ? img.width : img.height;
     int newHeight = (angle == 180) ? img.height : img.width;
 
@@ -274,13 +280,19 @@ Image Darkenandlighten(Image& image){
 
 // 8- crop
 Image crop(Image& image) {
-    cout<<"Enter cropped Image Dimensions:\n";
-    int row,col;
-    cin>>row>>col;
-    Image image2(row,col);
-    cout<<"Enter where to cut:\n";
+    cout<<"Enter where to cut row*col:\n";
     int rownod,colnod;
     cin>>rownod>>colnod;
+    cout<<"Enter cropped Image Dimensions row*col:\n-> ";
+    int row,col;
+    cin>>row>>col;
+    while (image.width < rownod + row || image.height < colnod + col) {
+    cout << "Invalid input! Try again with valid inputs \n -> ";
+    cin >> row >> col;
+}
+    cout<<"test\n";
+    Image image2(row,col);
+
     for(int i=rownod;i<rownod+row;i++) {
         for(int j=colnod;j<colnod+col;j++) {
             for(int k=0;k<3;k++) image2(i-rownod,j-colnod,k)=image(i,j,k);
@@ -300,12 +312,14 @@ Image frame(Image& img){
 
     cout << "Choose frame type (0 = Simple, 1 = Decorated): ";
     cin >> choice;
-
+    while (choice != 0 && choice != 1) {
+        cout << "Invalid input! Try again (0/1): ";
+        cin >> choice;
+    }
     int newW = img.width + 2 * thickness;
     int newH = img.height + 2 * thickness;
 
     Image framed(newW, newH);
-
 
     for (int y = 0; y < newH; y++) {
         for (int x = 0; x < newW; x++) {
@@ -440,6 +454,10 @@ int main(){
             cout<<"save?? (1)-to save\n(0)-to not save \n ";
         int k;
         cin>>k;
+        while (k != 1 && k != 0) {
+            cout << "Invalid input! Try again (1 or 0): ";
+            cin >> k;
+        }
         if (k)save_image(image,photo);
         return 0;
         break;
