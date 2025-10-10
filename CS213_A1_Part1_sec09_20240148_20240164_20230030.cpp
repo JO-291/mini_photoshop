@@ -4,7 +4,7 @@
 // name : Hassan Mohammed       s:s9            Id:20240164 Filters : 3,6,9,12
 // github repo: https://github.com/JO-291/mini_photoshop
 // vid :     https://drive.google.com/drive/folders/1MF-7ubACQxSf8J2ZoOHFS-64Bhg3LIil?usp=sharing
-// doc :
+// doc :     https://docs.google.com/document/d/1zZlB8MbmobjaWaDg6V7xRI0523bWze8WfydQDftsudo/edit?usp=sharing
 #include<iostream>
 #include<cmath>
 #include <vector>
