@@ -2,6 +2,8 @@
 // name :John Samy Gadelkareem  s:s23           Id:20240148 Filters : 2,5,8,11 + bonus tv & purple
 // name :Ahmed Khattab          didn't register Id:20230030 Filters : 1,4,7,10
 // name : Hassan Mohammed       s:s9            Id:20240164 Filters : 3,6,9,12
+// github repo: https://github.com/JO-291/mini_photoshop
+// drive :
 
 #include<iostream>
 #include<cmath>
